@@ -3,12 +3,10 @@
 		<input v-model="info.name" class="title-input" placeholder="标题" />
 		<textarea placeholder="详细描述..." :auto-height="true" maxlength="-1" v-model="info.detail"
 			class="post-txt"></textarea>
-		<view @click="showTodoDate = true">待办日期：{{info.todoDate}}</view>
+		<view>记录日期：{{info.theDayDate}}</view>
 		<view @click="showNotifyDate = true">提醒日期：{{info.notifyDate}}</view>
 		<u-upload ref="uUpload" :size-type="['compressed']" name="Image" :max-count="9" :action="uploadImgUrl"
 			@on-uploaded="submit" :auto-upload="false"></u-upload>
-		<u-picker :default-time="info.todoDate" @confirm="onTodoDateSelected" mode="time" v-model="showTodoDate">
-		</u-picker>
 		<u-picker :default-time="info.notifyDate" @confirm="onNotifyDateSelected" mode="time" v-model="showNotifyDate">
 		</u-picker>
 		<button @click="commitData">{{isEdit ? "修改" : "新增"}}</button>
@@ -19,10 +17,11 @@
 <script>
 	export default {
 		onLoad(options) {
-			if (options.data == null) {
+			if (options.date != null) {
 				// 新增
 				this.isEdit = false;
-			} else {
+				this.info.theDayDate = options.date;
+			} else if (options.data != null) {
 				// 修改
 				this.isEdit = true;
 				this.info = JSON.parse(options.data);
@@ -32,18 +31,12 @@
 		data() {
 			return {
 				isEdit: false,
-				showTodoDate: false,
 				showNotifyDate: false,
 				uploadImgUrl: '图片上传地址',
-				info: {
-
-				},
+				info: {},
 			}
 		},
 		methods: {
-			onTodoDateSelected(params) {
-				this.info.todoDate = params.year + '-' + params.month + '-' + params.day
-			},
 			onNotifyDateSelected(params) {
 				this.info.notifyDate = params.year + '-' + params.month + '-' + params.day
 			},
@@ -51,7 +44,7 @@
 				uni.showLoading();
 				uni.request({
 					method: "POST",
-					url: "http://localhost:8080/todo",
+					url: "http://localhost:8080/the_day",
 					data: this.info,
 					success: (res) => {
 						uni.showToast({
@@ -72,7 +65,7 @@
 				uni.showLoading();
 				uni.request({
 					method: "DELETE",
-					url: "http://localhost:8080/todo/" + this.info.id,
+					url: "http://localhost:8080/the_day/" + this.info.id,
 					success: (res) => {
 						uni.showToast({
 							title: "提交成功"

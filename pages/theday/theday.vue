@@ -6,12 +6,15 @@
 			<view>{{item.name}}</view>
 			<view>{{item.detail}}</view>
 		</view>
+		<button @click="add" style="position: absolute; bottom: 16px; right: 16px;">
+			新增
+		</button>
 	</view>
 </template>
 
 <script>
 	import dateFormat from "../../utils/date_util.js";
-	
+
 	export default {
 		onLoad() {
 			var today = new Date();
@@ -41,9 +44,9 @@
 				}
 				yearMonth += calendar.month;
 				this.curYearMonth = yearMonth;
-				
+
 				// 先尝试从缓存取，取不到再请求
-				if(this.yearMonthMap[this.curYearMonth] != null) {
+				if (this.yearMonthMap[this.curYearMonth] != null) {
 					this.showDayList();
 				} else {
 					this.loadData();
@@ -84,7 +87,17 @@
 						this.list.push(records[index]);
 					}
 				}
-			}
+			},
+			add() {
+				uni.navigateTo({
+					url: "../theDayDetail/theDayDetail?date=" + this.curDate,
+				})
+			},
+			toDetail(item) {
+				uni.navigateTo({
+					url: "../theDayDetail/theDayDetail?data=" + encodeURIComponent(JSON.stringify(item)),
+				})
+			},
 		}
 	}
 </script>
