@@ -1,59 +1,89 @@
 <template>
 	<view>
-		<uni-calendar @change="onCalendarChange" :selected="theDayList"></uni-calendar>
+		<view>{{test}}</view>
+		<uni-calendar @monthSwitch="onMonthSwitch" @change="onDayChanged" :selected="theHintList"></uni-calendar>
+		<view @click="toDetail(item)" style="padding: 5px;" v-for="item in list">
+			<view>{{item.name}}</view>
+			<view>{{item.detail}}</view>
+		</view>
 	</view>
 </template>
 
 <script>
+	import dateFormat from "../../utils/date_util.js";
+	
 	export default {
+		onLoad() {
+			var today = new Date();
+			this.curYearMonth = dateFormat(today, "yyyy-MM");
+			this.curDate = dateFormat(today, "yyyy-MM-dd");
+			this.loadData();
+		},
 		data() {
 			return {
+				test: "",
+				curYearMonth: "",
 				show: true,
-				theDayList: [{
-					date: '2021-09-02',
-					info: '签到'
-				}]
+				theHintList: [],
+				yearMonthMap: {},
+				list: [],
 			}
 		},
 		methods: {
-			// {
-			// 	"range": {
-			// 		"before": "",
-			// 		"after": "",
-			// 		"data": []
-			// 	},
-			// 	"year": 2021,
-			// 	"month": "09",
-			// 	"date": 15,
-			// 	"fulldate": "2021-09-15",
-			// 	"lunar": {
-			// 		"lYear": 2021,
-			// 		"lMonth": 8,
-			// 		"lDay": 9,
-			// 		"Animal": "牛",
-			// 		"IMonthCn": "八月",
-			// 		"IDayCn": "初九",
-			// 		"cYear": 2021,
-			// 		"cMonth": 9,
-			// 		"cDay": 15,
-			// 		"gzYear": "辛丑",
-			// 		"gzMonth": "丁酉",
-			// 		"gzDay": "丙寅",
-			// 		"isToday": false,
-			// 		"isLeap": false,
-			// 		"nWeek": 3,
-			// 		"ncWeek": "星期三",
-			// 		"isTerm": false,
-			// 		"Term": null,
-			// 		"astro": "处女座"
-			// 	},
-			// 	"extraInfo": {}
-			// }
-			onCalendarChange(calendar) {
-				var date = calendar.fulldate;
-				uni.showToast({
-					title: date,
+			onDayChanged(calendar) {
+				this.curDate = calendar.fulldate;
+				this.showDayList();
+			},
+			onMonthSwitch(calendar) {
+				var yearMonth = calendar.year + "-";
+				if (calendar.month < 10) {
+					yearMonth += "0";
+				}
+				yearMonth += calendar.month;
+				this.curYearMonth = yearMonth;
+				
+				// 先尝试从缓存取，取不到再请求
+				if(this.yearMonthMap[this.curYearMonth] != null) {
+					this.showDayList();
+				} else {
+					this.loadData();
+				}
+			},
+			loadData() {
+				uni.showLoading();
+				uni.request({
+					url: "http://localhost:8080/the_day/page?size=100&page=1&queryDate=" + this.curYearMonth,
+					success: (res) => {
+						// 记录 x年x月 下所有数据
+						var records = this.yearMonthMap[this.curYearMonth] = res.data.data.records;
+
+						// 记录 x年x月 下所有日期红点提示
+						for (var index in records) {
+							this.theHintList.push({
+								date: records[index].theDayDate
+							});
+						}
+
+						this.showDayList();
+					},
+					fail: (error) => {
+						console.log(error);
+					},
+					complete: () => {
+						console.log("complete");
+						uni.hideLoading();
+					}
 				})
+			},
+			showDayList() {
+				// 过滤当日数据列表
+				var records = this.yearMonthMap[this.curYearMonth];
+				this.list = [];
+				for (var index in records) {
+					if (this.curDate == records[index].theDayDate) {
+						this.list.push(records[index]);
+					}
+				}
 			}
 		}
 	}
