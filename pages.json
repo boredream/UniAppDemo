@@ -13,6 +13,9 @@
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
 		"list": [{
+			"pagePath": "pages/todolist/todolist",
+			"text": "待办"
+		}, {
 			"pagePath": "pages/home/home",
 			"text": "组件"
 		}, {
@@ -29,10 +32,15 @@
 		}, {
 			"path": "pages/home/home"
 		}, {
+			"path": "pages/todolist/todolist",
+			"style": {
+				"navigationBarTitleText": "待办事项",
+				"enablePullDownRefresh": true
+			}
+		}, {
 			"path": "pages/theday/theday",
 			"style": {
-				"navigationBarTitleText": "纪念日",
-				"enablePullDownRefresh": false
+				"navigationBarTitleText": "纪念日"
 			}
 		}, {
 			"path": "pages/tododetail/tododetail",

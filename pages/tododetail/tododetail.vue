@@ -1,49 +1,92 @@
 <template>
 	<view class="container">
-		<input v-model="form.title" class="title-input" placeholder="标题(选填)" />
-		<textarea placeholder="这一刻的想法..." :auto-height="true" maxlength="-1" v-model="form.content"
+		<input v-model="info.name" class="title-input" placeholder="标题(选填)" />
+		<textarea placeholder="这一刻的想法..." :auto-height="true" maxlength="-1" v-model="info.detail"
 			class="post-txt"></textarea>
-		<label @click="show = true">纪念日期：{{theDayDate}}</label>
+		<view @click="showTodoDate = true">待办日期：{{info.todoDate}}</view>
+		<view @click="showNotifyDate = true">提醒日期：{{info.notifyDate}}</view>
 		<u-upload ref="uUpload" :size-type="['compressed']" name="Image" :max-count="9" :action="uploadImgUrl"
 			@on-uploaded="submit" :auto-upload="false"></u-upload>
-		<u-picker :default-time="theDayDate" @confirm="onDateSelected" mode="time" v-model="show"></u-picker>
-		<button @click="editData">修改</button>
-		<button @click="deleteData">删除</button>
+		<u-picker :default-time="info.todoDate" @confirm="onTodoDateSelected" mode="time" v-model="showTodoDate">
+		</u-picker>
+		<u-picker :default-time="info.notifyDate" @confirm="onNotifyDateSelected" mode="time" v-model="showNotifyDate">
+		</u-picker>
+		<button @click="commitData">{{isEdit ? "修改" : "新增"}}</button>
+		<button v-if="isEdit" @click="deleteData">删除</button>
 	</view>
 </template>
 
 <script>
 	export default {
 		onLoad(options) {
-
+			if (options.data == null) {
+				// 新增
+				this.isEdit = false;
+			} else {
+				// 修改
+				this.isEdit = true;
+				this.info = JSON.parse(options.data);
+				console.log("onload" + this.info);
+			}
 		},
 		data() {
 			return {
-				show: false,
-				theDayDate: '2021-12-21',
+				isEdit: false,
+				showTodoDate: false,
+				showNotifyDate: false,
 				uploadImgUrl: '图片上传地址',
-				form: {
-					title: '',
-					type: 1,
-					topic_id: '',
-					discuss_id: '',
-					content: '',
-					media: [],
-					longitude: 0,
-					latitude: 0,
-					address: ''
+				info: {
+
 				},
 			}
 		},
 		methods: {
-			onDateSelected(params) {
-				this.theDayDate = params.year + '-' + params.month + '-' + params.day
+			onTodoDateSelected(params) {
+				this.info.todoDate = params.year + '-' + params.month + '-' + params.day
 			},
-			editData() {
-
+			onNotifyDateSelected(params) {
+				this.info.notifyDate = params.year + '-' + params.month + '-' + params.day
+			},
+			commitData() {
+				uni.showLoading();
+				uni.request({
+					method: "POST",
+					url: "http://localhost:8080/todo",
+					data: this.info,
+					success: (res) => {
+						uni.showToast({
+							title: "提交成功"
+						});
+						uni.navigateBack();
+					},
+					fail: (error) => {
+						console.log(error);
+					},
+					complete: () => {
+						console.log("complete");
+						uni.hideLoading();
+					}
+				})
 			},
 			deleteData() {
-
+				uni.showLoading();
+				uni.request({
+					method: "DELETE",
+					url: "http://localhost:8080/todo/" + this.info.id,
+					success: (res) => {
+						uni.showToast({
+							title: "提交成功"
+						});
+						uni.navigateBack();
+					},
+					fail: (error) => {
+						console.log(error);
+					},
+					complete: () => {
+						console.log("complete");
+						uni.hideLoading();
+					}
+				})
 			},
 		}
 	};
@@ -60,7 +103,7 @@
 	.post-txt {
 		width: 100%;
 		padding: 20rpx 0;
-		min-height: 300rpx;
+		min-height: 200rpx;
 	}
 
 	.upload-wrap {
