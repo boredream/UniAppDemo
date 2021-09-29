@@ -3,11 +3,15 @@
 		<input v-model="info.name" class="title-input" placeholder="标题" />
 		<textarea placeholder="详细描述..." :auto-height="true" maxlength="-1" v-model="info.detail"
 			class="post-txt"></textarea>
-		<view>记录日期：{{info.theDayDate}}</view>
+		<view @click="showTheDayDate = true">记录日期：{{info.theDayDate}}</view>
 		<view @click="showNotifyDate = true">提醒日期：{{info.notifyDate}}</view>
 		<u-upload ref="uUpload" :size-type="['compressed']" name="Image" :max-count="9" :action="uploadImgUrl"
 			@on-uploaded="submit" :auto-upload="false"></u-upload>
-		<u-picker :default-time="info.notifyDate" @confirm="onNotifyDateSelected" mode="time" v-model="showNotifyDate">
+		<u-picker :default-time="info.theDayDate != null ? info.theDayDate : ''" @confirm="onTheDayDateSelected"
+			mode="time" v-model="showTheDayDate">
+		</u-picker>
+		<u-picker :default-time="info.notifyDate != null ? info.notifyDate : ''" @confirm="onNotifyDateSelected"
+			mode="time" v-model="showNotifyDate">
 		</u-picker>
 		<button @click="commitData">{{isEdit ? "修改" : "新增"}}</button>
 		<button v-if="isEdit" @click="deleteData">删除</button>
@@ -15,6 +19,7 @@
 </template>
 
 <script>
+	import request from "../../utils/request_util.js";
 	export default {
 		onLoad(options) {
 			if (options.date != null) {
@@ -31,55 +36,24 @@
 		data() {
 			return {
 				isEdit: false,
+				showTheDayDate: false,
 				showNotifyDate: false,
 				uploadImgUrl: '图片上传地址',
 				info: {},
 			}
 		},
 		methods: {
+			onTheDayDateSelected(params) {
+				this.info.theDayDate = params.year + '-' + params.month + '-' + params.day
+			},
 			onNotifyDateSelected(params) {
 				this.info.notifyDate = params.year + '-' + params.month + '-' + params.day
 			},
 			commitData() {
-				uni.showLoading();
-				uni.request({
-					method: "POST",
-					url: "http://localhost:8080/the_day",
-					data: this.info,
-					success: (res) => {
-						uni.showToast({
-							title: "提交成功"
-						});
-						uni.navigateBack();
-					},
-					fail: (error) => {
-						console.log(error);
-					},
-					complete: () => {
-						console.log("complete");
-						uni.hideLoading();
-					}
-				})
+				request.postOrPutTable("the_day", this.isEdit, this.info);
 			},
 			deleteData() {
-				uni.showLoading();
-				uni.request({
-					method: "DELETE",
-					url: "http://localhost:8080/the_day/" + this.info.id,
-					success: (res) => {
-						uni.showToast({
-							title: "提交成功"
-						});
-						uni.navigateBack();
-					},
-					fail: (error) => {
-						console.log(error);
-					},
-					complete: () => {
-						console.log("complete");
-						uni.hideLoading();
-					}
-				})
+				request.deleteTable("the_day", this.info);
 			},
 		}
 	};

@@ -36,7 +36,7 @@
 		methods: {
 			add() {
 				uni.navigateTo({
-					url: "../tododetail/tododetail",
+					url: "../tododetail/tododetail?type=" + this.curType,
 				})
 			},
 			toDetail(item) {

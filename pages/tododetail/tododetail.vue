@@ -17,12 +17,14 @@
 </template>
 
 <script>
+	import request from "../../utils/request_util.js";
 	export default {
 		onLoad(options) {
-			if (options.data == null) {
+			if (options.type != null) {
 				// 新增
 				this.isEdit = false;
-			} else {
+				this.info.type = options.type;
+			} else if (options.data != null) {
 				// 修改
 				this.isEdit = true;
 				this.info = JSON.parse(options.data);
@@ -48,45 +50,10 @@
 				this.info.notifyDate = params.year + '-' + params.month + '-' + params.day
 			},
 			commitData() {
-				uni.showLoading();
-				uni.request({
-					method: "POST",
-					url: "http://localhost:8080/todo",
-					data: this.info,
-					success: (res) => {
-						uni.showToast({
-							title: "提交成功"
-						});
-						uni.navigateBack();
-					},
-					fail: (error) => {
-						console.log(error);
-					},
-					complete: () => {
-						console.log("complete");
-						uni.hideLoading();
-					}
-				})
+				request.postOrPutTable("todo", this.isEdit, this.info);
 			},
 			deleteData() {
-				uni.showLoading();
-				uni.request({
-					method: "DELETE",
-					url: "http://localhost:8080/todo/" + this.info.id,
-					success: (res) => {
-						uni.showToast({
-							title: "提交成功"
-						});
-						uni.navigateBack();
-					},
-					fail: (error) => {
-						console.log(error);
-					},
-					complete: () => {
-						console.log("complete");
-						uni.hideLoading();
-					}
-				})
+				request.deleteTable("todo", this.info);
 			},
 		}
 	};
