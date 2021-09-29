@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "待办详情",
+  "usingComponents": {
+    "u-upload": "/uview-ui/components/u-upload/u-upload",
+    "u-picker": "/uview-ui/components/u-picker/u-picker"
+  }
+}
