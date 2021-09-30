@@ -51,7 +51,7 @@
 			loadData() {
 				uni.showLoading();
 				uni.request({
-					url: "http://localhost:8080/todo/page?size=20&page=1&type=" + this.curType,
+					url: "http://106.14.25.153:8080/todo/page?size=20&page=1&type=" + this.curType,
 					success: (res) => {
 						this.list = res.data.data.records;
 					},

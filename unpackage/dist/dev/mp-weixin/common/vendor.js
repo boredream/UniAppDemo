@@ -10628,7 +10628,7 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 
 function postOrPutTable(table, isEdit, info) {
   var requestMethod = "POST";
-  var requestUrl = "http://localhost:8080/" + table;
+  var requestUrl = "http://106.14.25.153:8080/" + table;
   if (isEdit) {
     requestMethod = "PUT";
     requestUrl += "/" + info.id;
@@ -10659,7 +10659,7 @@ function deleteTable(table, info) {
   uni.showLoading();
   uni.request({
     method: "DELETE",
-    url: "http://localhost:8080/" + table + "/" + info.id,
+    url: "http://106.14.25.153:8080/" + table + "/" + info.id,
     success: function success(res) {
       uni.showToast({
         title: "提交成功" });

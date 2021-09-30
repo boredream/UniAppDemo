@@ -5,7 +5,7 @@ export default {
 
 export function postOrPutTable(table, isEdit, info) {
 	var requestMethod = "POST";
-	var requestUrl = "http://localhost:8080/" + table;
+	var requestUrl = "http://106.14.25.153:8080/" + table;
 	if (isEdit) {
 		requestMethod = "PUT";
 		requestUrl += ("/" + info.id);
@@ -36,7 +36,7 @@ export function deleteTable(table, info) {
 	uni.showLoading();
 	uni.request({
 		method: "DELETE",
-		url: "http://localhost:8080/" + table + "/" + info.id,
+		url: "http://106.14.25.153:8080/" + table + "/" + info.id,
 		success: (res) => {
 			uni.showToast({
 				title: "提交成功"

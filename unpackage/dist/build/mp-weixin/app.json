@@ -1,0 +1,39 @@
+{
+  "pages": [
+    "pages/todolist/todolist",
+    "pages/tododetail/tododetail",
+    "pages/theday/theday",
+    "pages/theDayDetail/theDayDetail",
+    "pages/mine/mine"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "团建手册",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8",
+    "enablePullDownRefresh": false
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#3cc51f",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/todolist/todolist",
+        "text": "待办"
+      },
+      {
+        "pagePath": "pages/theday/theday",
+        "text": "纪念日"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的"
+      }
+    ]
+  },
+  "usingComponents": {},
+  "sitemapLocation": "sitemap.json"
+}

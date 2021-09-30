@@ -50,7 +50,7 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "",
+        "appid" : "wx0896ca1ddd64114e",
         "setting" : {
             "urlCheck" : false
         },
@@ -68,5 +68,9 @@
     "uniStatistics" : {
         "enable" : false
     },
-    "vueVersion" : "2"
+    "vueVersion" : "2",
+    "h5" : {
+        "title" : "LoveCookBook",
+        "domain" : "106.14.25.153"
+    }
 }

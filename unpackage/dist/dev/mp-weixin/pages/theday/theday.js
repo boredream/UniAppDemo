@@ -208,7 +208,7 @@ var _default = { onLoad: function onLoad() {var today = new Date();this.curYearM
     loadData: function loadData() {var _this = this;
       uni.showLoading();
       uni.request({
-        url: "http://localhost:8080/the_day/page?size=100&page=1&queryDate=" + this.curYearMonth,
+        url: "http://106.14.25.153:8080/the_day/page?size=100&page=1&queryDate=" + this.curYearMonth,
         success: function success(res) {
           // 记录 x年x月 下所有数据
           var records = _this.yearMonthMap[_this.curYearMonth] = res.data.data.records;

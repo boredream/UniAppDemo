@@ -55,7 +55,7 @@
 			loadData() {
 				uni.showLoading();
 				uni.request({
-					url: "http://localhost:8080/the_day/page?size=100&page=1&queryDate=" + this.curYearMonth,
+					url: "http://106.14.25.153:8080/the_day/page?size=100&page=1&queryDate=" + this.curYearMonth,
 					success: (res) => {
 						// 记录 x年x月 下所有数据
 						var records = this.yearMonthMap[this.curYearMonth] = res.data.data.records;
