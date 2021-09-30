@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/splash/splash",
     "pages/todolist/todolist",
     "pages/tododetail/tododetail",
     "pages/theday/theday",
@@ -34,5 +35,6 @@
       }
     ]
   },
-  "usingComponents": {}
+  "usingComponents": {},
+  "sitemapLocation": "sitemap.json"
 }

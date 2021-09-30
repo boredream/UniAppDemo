@@ -1,0 +1,1 @@
+<view><button class="sys_btn" open-type="getUserInfo" lang="zh_CN" data-event-opts="{{[['getuserinfo',[['appLoginWx',['$event']]]]]}}" bindgetuserinfo="__e">小程序登录授权</button></view>
