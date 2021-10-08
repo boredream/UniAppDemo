@@ -5,7 +5,7 @@
 		</radio-group>
 
 		<view style="padding: 5px;" v-for="item in list">
-			<checkbox @click="onCompleted(item)"></checkbox>
+			<checkbox :checked="item.done" @click="onCompleted(item)"></checkbox>
 			<span @click="toDetail(item)">{{item.name}}</span>
 		</view>
 		<button @click="add" style="position: absolute; bottom: 16px; right: 16px;">
@@ -42,12 +42,12 @@
 			},
 			toDetail(item) {
 				uni.navigateTo({
-					url: "../tododetail/tododetail?data=" + encodeURIComponent(JSON.stringify(item)),
+					url: "../tododetail/tododetail?data=" + JSON.stringify(item),
 				})
 			},
 			onCompleted(item) {
 				uni.navigateTo({
-					url: "../tododetail/tododetail?data=" + encodeURIComponent(JSON.stringify(item)),
+					url: "../tododetail/tododetail?data=" + JSON.stringify(item),
 				})
 			},
 			radioChange(item) {

@@ -5,8 +5,8 @@ export default {
 	deleteTable,
 }
 
-// const host = 'http://106.14.25.153:8080/';
-const HOST = 'http://localhost:8080/';
+const HOST = 'http://106.14.25.153:8080/';
+// const HOST = 'http://localhost:8080/';
 const CODE_SUCCESS = 1;
 
 function getTable(path, extraParam, onSuccess) {
@@ -65,7 +65,6 @@ function request(method, path, extraParam, extraHeader, onSuccess) {
 			onFail(error);
 		},
 		complete: () => {
-			console.log("request complete");
 			uni.hideLoading();
 		}
 	})

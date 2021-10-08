@@ -172,12 +172,12 @@ var _default = { data: function data() {return { typeList: ["美食", "看剧", 
     },
     toDetail: function toDetail(item) {
       uni.navigateTo({
-        url: "../tododetail/tododetail?data=" + encodeURIComponent(JSON.stringify(item)) });
+        url: "../tododetail/tododetail?data=" + JSON.stringify(item) });
 
     },
     onCompleted: function onCompleted(item) {
       uni.navigateTo({
-        url: "../tododetail/tododetail?data=" + encodeURIComponent(JSON.stringify(item)) });
+        url: "../tododetail/tododetail?data=" + JSON.stringify(item) });
 
     },
     radioChange: function radioChange(item) {

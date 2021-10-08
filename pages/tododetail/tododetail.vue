@@ -3,11 +3,11 @@
 		<input v-model="info.name" class="title-input" placeholder="标题" />
 		<textarea placeholder="详细描述..." :auto-height="true" maxlength="-1" v-model="info.detail"
 			class="post-txt"></textarea>
-		<view @click="showTodoDate = true">待办日期：{{info.todoDate}}</view>
+		<view @click="showTodoDate = true">待办日期：{{info.doneDate}}</view>
 		<view @click="showNotifyDate = true">提醒日期：{{info.notifyDate}}</view>
 		<u-upload ref="uUpload" :size-type="['compressed']" name="Image" :max-count="9" :action="uploadImgUrl"
 			@on-uploaded="submit" :auto-upload="false"></u-upload>
-		<u-picker :default-time="info.todoDate" @confirm="onTodoDateSelected" mode="time" v-model="showTodoDate">
+		<u-picker :default-time="info.doneDate" @confirm="onTodoDateSelected" mode="time" v-model="showTodoDate">
 		</u-picker>
 		<u-picker :default-time="info.notifyDate" @confirm="onNotifyDateSelected" mode="time" v-model="showNotifyDate">
 		</u-picker>

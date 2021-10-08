@@ -10662,11 +10662,11 @@ function wxLogin(info, onSuccess) {
   getTable: getTable,
   getPageTable: getPageTable,
   postOrPutTable: postOrPutTable,
-  deleteTable: deleteTable };
+  deleteTable: deleteTable };exports.default = _default;
 
 
-// const host = 'http://106.14.25.153:8080/';
-exports.default = _default;var HOST = 'http://localhost:8080/';
+var HOST = 'http://106.14.25.153:8080/';
+// const HOST = 'http://localhost:8080/';
 var CODE_SUCCESS = 1;
 
 function getTable(path, extraParam, onSuccess) {
@@ -10725,7 +10725,6 @@ function request(method, path, extraParam, extraHeader, onSuccess) {
       onFail(error);
     },
     complete: function complete() {
-      console.log("request complete");
       uni.hideLoading();
     } });
 

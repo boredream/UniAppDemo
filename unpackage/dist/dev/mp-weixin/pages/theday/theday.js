@@ -165,7 +165,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var _date_util = _interopRequireDefault(__webpack_require__(/*! ../../utils/date_util.js */ 70));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
+var _date_util = _interopRequireDefault(__webpack_require__(/*! ../../utils/date_util.js */ 70));
+var _request_util = _interopRequireDefault(__webpack_require__(/*! ../../utils/request_util.js */ 47));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
 //
 //
 //
@@ -205,30 +206,19 @@ var _default = { onLoad: function onLoad() {var today = new Date();this.curYearM
       }
     },
     loadData: function loadData() {var _this = this;
-      uni.showLoading();
-      uni.request({
-        url: "http://106.14.25.153:8080/the_day/page?size=100&page=1&queryDate=" + this.curYearMonth,
-        success: function success(res) {
-          // 记录 x年x月 下所有数据
-          var records = _this.yearMonthMap[_this.curYearMonth] = res.data.data.records;
+      _request_util.default.getPageTable("the_day", 1, 100, "&queryDate=" + this.curYearMonth, function (res) {
+        // 记录 x年x月 下所有数据
+        var records = _this.yearMonthMap[_this.curYearMonth] = res.records;
 
-          // 记录 x年x月 下所有日期红点提示
-          for (var index in records) {
-            _this.theHintList.push({
-              date: records[index].theDayDate });
+        // 记录 x年x月 下所有日期红点提示
+        for (var index in records) {
+          _this.theHintList.push({
+            date: records[index].theDayDate });
 
-          }
+        }
 
-          _this.showDayList();
-        },
-        fail: function fail(error) {
-          console.log(error);
-        },
-        complete: function complete() {
-          console.log("complete");
-          uni.hideLoading();
-        } });
-
+        _this.showDayList();
+      });
     },
     showDayList: function showDayList() {
       // 过滤当日数据列表
@@ -247,7 +237,7 @@ var _default = { onLoad: function onLoad() {var today = new Date();this.curYearM
     },
     toDetail: function toDetail(item) {
       uni.navigateTo({
-        url: "../theDayDetail/theDayDetail?data=" + encodeURIComponent(JSON.stringify(item)) });
+        url: "../theDayDetail/theDayDetail?data=" + JSON.stringify(item) });
 
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
