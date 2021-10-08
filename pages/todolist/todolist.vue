@@ -4,9 +4,9 @@
 			<radio v-for="item in typeList" :value="item" :checked="item == curType">{{item}}</radio>
 		</radio-group>
 
-		<view @click="toDetail(item)" style="padding: 5px;" v-for="item in list">
-			<view>{{item.name}}</view>
-			<view>{{item.detail}}</view>
+		<view style="padding: 5px;" v-for="item in list">
+			<checkbox @click="onCompleted(item)"></checkbox>
+			<span @click="toDetail(item)">{{item.name}}</span>
 		</view>
 		<button @click="add" style="position: absolute; bottom: 16px; right: 16px;">
 			新增
@@ -15,6 +15,7 @@
 </template>
 
 <script>
+	import request from "../../utils/request_util.js";
 	export default {
 		data() {
 			return {
@@ -44,25 +45,19 @@
 					url: "../tododetail/tododetail?data=" + encodeURIComponent(JSON.stringify(item)),
 				})
 			},
+			onCompleted(item) {
+				uni.navigateTo({
+					url: "../tododetail/tododetail?data=" + encodeURIComponent(JSON.stringify(item)),
+				})
+			},
 			radioChange(item) {
 				this.curType = item.detail.value;
 				this.loadData();
 			},
 			loadData() {
-				uni.showLoading();
-				uni.request({
-					url: "http://106.14.25.153:8080/todo/page?size=20&page=1&type=" + this.curType,
-					success: (res) => {
-						this.list = res.data.data.records;
-					},
-					fail: (error) => {
-						console.log(error);
-					},
-					complete: () => {
-						console.log("complete");
-						uni.hideLoading();
-					}
-				})
+				request.getPageTable("todo", 1, 100, "&type=" + this.curType, (data) => {
+					this.list = data.records;
+				});
 			}
 		},
 		/**

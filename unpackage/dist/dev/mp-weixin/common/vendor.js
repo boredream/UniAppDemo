@@ -10619,7 +10619,7 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
   wxLogin: wxLogin };exports.default = _default;
 
 
-function wxLogin(info) {
+function wxLogin(info, onSuccess) {
   var requestMethod = "POST";
   // var requestUrl = "http://106.14.25.153:8080/user/wxlogin";
   var requestUrl = "http://localhost:8080/user/wxlogin";
@@ -10630,11 +10630,13 @@ function wxLogin(info) {
     url: requestUrl,
     data: info,
     success: function success(res) {
-      console.log(res);
-      uni.showToast({
-        title: "提交成功" });
+      var token = res.data.data;
+      console.log("wx login success = " + token);
+      uni.setStorage({
+        key: "token",
+        data: token,
+        success: function success() {return onSuccess();} });
 
-      // uni.navigateBack();
     },
     fail: function fail(error) {
       console.log(error);
@@ -10648,7 +10650,109 @@ function wxLogin(info) {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),
-/* 47 */,
+/* 47 */
+/*!*********************************************************************!*\
+  !*** /Users/lcy/Documents/code/wx/UniAppDemo/utils/request_util.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = {
+  getTable: getTable,
+  getPageTable: getPageTable,
+  postOrPutTable: postOrPutTable,
+  deleteTable: deleteTable };
+
+
+// const host = 'http://106.14.25.153:8080/';
+exports.default = _default;var HOST = 'http://localhost:8080/';
+var CODE_SUCCESS = 1;
+
+function getTable(path, extraParam, onSuccess) {
+  request("GET", path, extraParam, null, onSuccess);
+}
+
+function getPageTable(path, page, size, extraParam, onSuccess) {
+  var requestPath = path + "/page?page=" + page + "&size=" + size;
+  request("GET", requestPath, extraParam, null, onSuccess);
+}
+
+function postOrPutTable(path, isEdit, info) {
+  var requestMethod = "POST";
+  var requestPath = path;
+  if (isEdit) {
+    requestMethod = "PUT";
+    requestPath += "/" + info.id;
+  }
+  request(requestMethod, requestPath, null, null, function (res) {
+    uni.showToast({
+      title: "提交成功" });
+
+    uni.navigateBack();
+  });
+}
+
+function deleteTable(path, info) {
+  var requestPath = path + "/" + info.id;
+  request("DELETE", requestPath, null, null, function (res) {
+    uni.showToast({
+      title: "提交成功" });
+
+    uni.navigateBack();
+  });
+}
+
+function request(method, path, extraParam, extraHeader, onSuccess) {
+  var url = HOST + path;
+  if (extraParam != null) {
+    url += extraParam;
+  }
+
+  uni.showLoading();
+  uni.request({
+    url: url,
+    header: getHeader(extraHeader),
+    success: function success(res) {
+      if (res.data.code != CODE_SUCCESS) {
+        onFail(res.data.code + ":" + res.data.message);
+        return;
+      }
+      onSuccess(res.data.data);
+    },
+    fail: function fail(error) {
+      console.log("request fail " + error);
+      onFail(error);
+    },
+    complete: function complete() {
+      console.log("request complete");
+      uni.hideLoading();
+    } });
+
+}
+
+function getHeader(extraHeader) {
+  console.log("getHeader");
+  var headers = {};
+  if (extraHeader != null) {
+    headers = extraHeader;
+  }
+  var token = uni.getStorageSync("token");
+  if (token != null) {
+    headers["token"] = token;
+  }
+  console.log(JSON.stringify(headers));
+  return headers;
+}
+
+function onFail(error) {
+  uni.showToast({
+    title: error });
+
+}
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
+
+/***/ }),
 /* 48 */,
 /* 49 */,
 /* 50 */,
@@ -10662,71 +10766,7 @@ function wxLogin(info) {
 /* 58 */,
 /* 59 */,
 /* 60 */,
-/* 61 */
-/*!*********************************************************************!*\
-  !*** /Users/lcy/Documents/code/wx/UniAppDemo/utils/request_util.js ***!
-  \*********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.postOrPutTable = postOrPutTable;exports.deleteTable = deleteTable;exports.default = void 0;var _default = {
-  postOrPutTable: postOrPutTable,
-  deleteTable: deleteTable };exports.default = _default;
-
-
-function postOrPutTable(table, isEdit, info) {
-  var requestMethod = "POST";
-  var requestUrl = "http://106.14.25.153:8080/" + table;
-  if (isEdit) {
-    requestMethod = "PUT";
-    requestUrl += "/" + info.id;
-  }
-
-  uni.showLoading();
-  uni.request({
-    method: requestMethod,
-    url: requestUrl,
-    data: info,
-    success: function success(res) {
-      uni.showToast({
-        title: "提交成功" });
-
-      uni.navigateBack();
-    },
-    fail: function fail(error) {
-      console.log(error);
-    },
-    complete: function complete() {
-      console.log("complete");
-      uni.hideLoading();
-    } });
-
-}
-
-function deleteTable(table, info) {
-  uni.showLoading();
-  uni.request({
-    method: "DELETE",
-    url: "http://106.14.25.153:8080/" + table + "/" + info.id,
-    success: function success(res) {
-      uni.showToast({
-        title: "提交成功" });
-
-      uni.navigateBack();
-    },
-    fail: function fail(error) {
-      console.log(error);
-    },
-    complete: function complete() {
-      console.log("complete");
-      uni.hideLoading();
-    } });
-
-}
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
-
-/***/ }),
+/* 61 */,
 /* 62 */,
 /* 63 */,
 /* 64 */,

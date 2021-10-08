@@ -165,7 +165,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
 var _date_util = _interopRequireDefault(__webpack_require__(/*! ../../utils/date_util.js */ 70));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
 //
 //
@@ -179,8 +178,8 @@ var _date_util = _interopRequireDefault(__webpack_require__(/*! ../../utils/date
 //
 //
 //
-//
-var _default = { onLoad: function onLoad() {var today = new Date();this.curYearMonth = (0, _date_util.default)(today, "yyyy-MM");this.curDate = (0, _date_util.default)(today, "yyyy-MM-dd");this.loadData();}, data: function data() {return { test: "", curYearMonth: "", show: true, theHintList: [],
+var _default = { onLoad: function onLoad() {var today = new Date();this.curYearMonth = (0, _date_util.default)(today, "yyyy-MM");this.curDate = (0, _date_util.default)(today, "yyyy-MM-dd");this.loadData();}, data: function data() {return { test: "", curYearMonth: "", show: true,
+      theHintList: [],
       yearMonthMap: {},
       list: [] };
 

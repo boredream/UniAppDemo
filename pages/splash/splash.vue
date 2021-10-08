@@ -8,31 +8,35 @@
 
 <script>
 	import authUtil from "../../utils/auth_util.js";
+	import request from "../../utils/request_util.js";
+
 	export default {
 		data() {
 			return {
-				SessionKey: '',
-				OpenId: '',
-				nickName: null,
-				avatarUrl: null,
-				isCanUse: uni.getStorageSync('isCanUse') || true //默认为true
+
 			};
 		},
 		methods: {
+			route2main() {
+				uni.switchTab({
+					url: "../todolist/todolist",
+				});
+			},
 			appLoginWx() {
 				// #ifdef MP-WEIXIN
 				// 检测手机上是否安装微信
 				uni.getProvider({
 					service: 'oauth',
-					success: function(res) {
+					success: (res) => {
 						if (~res.provider.indexOf('weixin')) {
 							// 授权登录
 							uni.login({
 								provider: 'weixin',
 								success: (authRes) => {
 									// 获取用户信息
-									authUtil.wxLogin(authRes);
-
+									authUtil.wxLogin(authRes, (res) => {
+										this.route2main();
+									});
 								},
 								fail: () => {
 									uni.showToast({
@@ -49,8 +53,20 @@
 					}
 				});
 				//#endif
-			}
-
+			},
+			onLoad(option) {
+				// 自动登录
+				if(uni.getStorageSync("token") != null) {
+					request.getTable("user/info", null, (res) => {
+						console.log("auto login success");
+						uni.setStorage({
+							key:"user",
+							data: res.data
+						});
+						this.route2main();
+					});
+				}
+			},
 		}
 	}
 </script>

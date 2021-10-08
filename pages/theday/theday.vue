@@ -4,7 +4,6 @@
 		<uni-calendar @monthSwitch="onMonthSwitch" @change="onDayChanged" :selected="theHintList"></uni-calendar>
 		<view @click="toDetail(item)" style="padding: 5px;" v-for="item in list">
 			<view>{{item.name}}</view>
-			<view>{{item.detail}}</view>
 		</view>
 		<button @click="add" style="position: absolute; bottom: 16px; right: 16px;">
 			新增
