@@ -3,11 +3,11 @@
 		<input v-model="info.name" class="title-input" placeholder="标题" />
 		<textarea placeholder="详细描述..." :auto-height="true" maxlength="-1" v-model="info.detail"
 			class="post-txt"></textarea>
-		<view @click="showTodoDate = true">待办日期：{{info.doneDate}}</view>
-		<view @click="showNotifyDate = true">提醒日期：{{info.notifyDate}}</view>
+		<view @click="showDoneDate = true">完成日期：{{info.doneDate != null ? info.doneDate : ""}}</view>
+		<!-- <view @click="showNotifyDate = true">提醒日期：{{info.notifyDate}}</view> -->
 		<u-upload ref="uUpload" :size-type="['compressed']" name="Image" :max-count="9" :action="uploadImgUrl"
 			@on-uploaded="submit" :auto-upload="false"></u-upload>
-		<u-picker :default-time="info.doneDate" @confirm="onTodoDateSelected" mode="time" v-model="showTodoDate">
+		<u-picker :default-time="info.doneDate" @confirm="onDoneDateSelected" mode="time" v-model="showDoneDate">
 		</u-picker>
 		<u-picker :default-time="info.notifyDate" @confirm="onNotifyDateSelected" mode="time" v-model="showNotifyDate">
 		</u-picker>
@@ -28,13 +28,12 @@
 				// 修改
 				this.isEdit = true;
 				this.info = JSON.parse(options.data);
-				console.log("onload" + this.info);
 			}
 		},
 		data() {
 			return {
 				isEdit: false,
-				showTodoDate: false,
+				showDoneDate: false,
 				showNotifyDate: false,
 				uploadImgUrl: '图片上传地址',
 				info: {
@@ -43,17 +42,21 @@
 			}
 		},
 		methods: {
-			onTodoDateSelected(params) {
-				this.info.todoDate = params.year + '-' + params.month + '-' + params.day
+			onDoneDateSelected(params) {
+				this.info.doneDate = params.year + '-' + params.month + '-' + params.day
 			},
 			onNotifyDateSelected(params) {
 				this.info.notifyDate = params.year + '-' + params.month + '-' + params.day
 			},
 			commitData() {
-				request.postOrPutTable("todo", this.isEdit, this.info);
+				if (this.isEdit) {
+					request.putTable("todo", this.info.id, this.info, "修改成功");
+				} else {
+					request.postTable("todo", this.info, "新增成功");
+				}
 			},
 			deleteData() {
-				request.deleteTable("todo", this.info);
+				request.deleteTable("todo", this.info.id, "删除成功");
 			},
 		}
 	};

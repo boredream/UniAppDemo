@@ -53,7 +53,7 @@
 				}
 			},
 			loadData() {
-				request.getPageTable("the_day", 1, 100, "&queryDate=" + this.curYearMonth, (res) => {
+				request.getPageTable("the_day/page?queryDate=" + this.curYearMonth, 1, 100, (res) => {
 					// 记录 x年x月 下所有数据
 					var records = this.yearMonthMap[this.curYearMonth] = res.records;
 					

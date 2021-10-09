@@ -3,8 +3,8 @@
 		<input v-model="info.name" class="title-input" placeholder="标题" />
 		<textarea placeholder="详细描述..." :auto-height="true" maxlength="-1" v-model="info.detail"
 			class="post-txt"></textarea>
-		<view @click="showTheDayDate = true">记录日期：{{info.theDayDate}}</view>
-		<view @click="showNotifyDate = true">提醒日期：{{info.notifyDate}}</view>
+		<view @click="showTheDayDate = true">记录日期：{{info.theDayDate != null ? info.theDayDate : ""}}</view>
+		<view @click="showNotifyDate = true">提醒日期：{{info.notifyDate != null ? info.notifyDate : ""}}</view>
 		<u-upload ref="uUpload" :size-type="['compressed']" name="Image" :max-count="9" :action="uploadImgUrl"
 			@on-uploaded="submit" :auto-upload="false"></u-upload>
 		<u-picker :default-time="info.theDayDate != null ? info.theDayDate : ''" @confirm="onTheDayDateSelected"
@@ -30,7 +30,6 @@
 				// 修改
 				this.isEdit = true;
 				this.info = JSON.parse(options.data);
-				console.log("onload" + this.info);
 			}
 		},
 		data() {
@@ -50,10 +49,14 @@
 				this.info.notifyDate = params.year + '-' + params.month + '-' + params.day
 			},
 			commitData() {
-				request.postOrPutTable("the_day", this.isEdit, this.info);
+				if (this.isEdit) {
+					request.putTable("the_day", this.info.id, this.info, "修改成功");
+				} else {
+					request.postTable("the_day", this.info, "新增成功");
+				}
 			},
 			deleteData() {
-				request.deleteTable("the_day", this.info);
+				request.deleteTable("the_day", this.info.id, "删除成功");
 			},
 		}
 	};

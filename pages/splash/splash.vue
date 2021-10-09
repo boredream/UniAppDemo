@@ -7,7 +7,6 @@
 </template>
 
 <script>
-	import authUtil from "../../utils/auth_util.js";
 	import request from "../../utils/request_util.js";
 
 	export default {
@@ -16,26 +15,48 @@
 
 			};
 		},
+		onLoad(option) {
+			// 自动登录
+			if (uni.getStorageSync("token") != null) {
+				this.getUserInfo();
+			}
+		},
 		methods: {
 			route2main() {
 				uni.switchTab({
 					url: "../todolist/todolist",
 				});
 			},
+			getUserInfo() {
+				request.getTable("user/info", (res) => {
+					console.log("auto login success");
+					uni.setStorage({
+						key: "user",
+						data: res.data
+					});
+					this.route2main();
+				});
+			},
 			appLoginWx() {
 				// #ifdef MP-WEIXIN
-				// 检测手机上是否安装微信
+				// step1. 检测手机上是否安装微信
+				console.log("step1. 检测手机上是否安装微信");
 				uni.getProvider({
 					service: 'oauth',
 					success: (res) => {
 						if (~res.provider.indexOf('weixin')) {
-							// 授权登录
+							// step2. wx授权登录，获取code
+							console.log("step2. wx授权登录，获取code");
 							uni.login({
 								provider: 'weixin',
-								success: (authRes) => {
-									// 获取用户信息
-									authUtil.wxLogin(authRes, (res) => {
-										this.route2main();
+								success: (authCode) => {
+									// step3. 通过code获取微信openId，并完成登录/注册，最终生成token
+									console.log("step3. 通过code获取微信openId，并完成登录/注册，最终生成token " + authCode);
+									request.postTable("user/wxlogin", authCode, (token) => {
+										console.log("wx login success = " + token);
+										uni.setStorageSync("token", token);
+										// step4. 获取用户信息，完成登录流程，跳转页面
+										this.getUserInfo();
 									});
 								},
 								fail: () => {
@@ -53,19 +74,6 @@
 					}
 				});
 				//#endif
-			},
-			onLoad(option) {
-				// 自动登录
-				if(uni.getStorageSync("token") != null) {
-					request.getTable("user/info", null, (res) => {
-						console.log("auto login success");
-						uni.setStorage({
-							key:"user",
-							data: res.data
-						});
-						this.route2main();
-					});
-				}
 			},
 		}
 	}

@@ -6,7 +6,7 @@
 
 		<view style="padding: 5px;" v-for="item in list">
 			<checkbox :checked="item.done" @click="onCompleted(item)"></checkbox>
-			<span @click="toDetail(item)">{{item.name}}</span>
+			<span @click="toDetail(item)">[{{item.doneDate.length > 0 ? item.doneDate : "未填写"}}] {{item.name}}</span>
 		</view>
 		<button @click="add" style="position: absolute; bottom: 16px; right: 16px;">
 			新增
@@ -55,8 +55,8 @@
 				this.loadData();
 			},
 			loadData() {
-				request.getPageTable("todo", 1, 100, "&type=" + this.curType, (data) => {
-					this.list = data.records;
+				request.getPageTable("todo/page?type=" + this.curType, 1, 100, (res) => {
+					this.list = res.records;
 				});
 			}
 		},
