@@ -55,7 +55,7 @@
 				this.loadData();
 			},
 			loadData() {
-				request.getPageTable("todo/page?type=" + this.curType, 1, 100, (res) => {
+				request.getPage("todo/page?type=" + this.curType, 1, 100, (res) => {
 					this.list = res.records;
 				});
 			}

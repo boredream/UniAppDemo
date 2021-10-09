@@ -50,13 +50,13 @@
 			},
 			commitData() {
 				if (this.isEdit) {
-					request.putTable("the_day", this.info.id, this.info, "修改成功");
+					request.put("the_day", this.info.id, this.info, "修改成功");
 				} else {
-					request.postTable("the_day", this.info, "新增成功");
+					request.post("the_day", this.info, "新增成功");
 				}
 			},
 			deleteData() {
-				request.deleteTable("the_day", this.info.id, "删除成功");
+				request.del("the_day", this.info.id, "删除成功");
 			},
 		}
 	};

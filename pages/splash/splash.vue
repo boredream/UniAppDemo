@@ -28,7 +28,7 @@
 				});
 			},
 			getUserInfo() {
-				request.getTable("user/info", (res) => {
+				request.get("user/info", (res) => {
 					console.log("auto login success");
 					uni.setStorage({
 						key: "user",
@@ -52,7 +52,7 @@
 								success: (authCode) => {
 									// step3. 通过code获取微信openId，并完成登录/注册，最终生成token
 									console.log("step3. 通过code获取微信openId，并完成登录/注册，最终生成token " + authCode);
-									request.postTable("user/wxlogin", authCode, (token) => {
+									request.post("user/wxlogin", authCode, (token) => {
 										console.log("wx login success = " + token);
 										uni.setStorageSync("token", token);
 										// step4. 获取用户信息，完成登录流程，跳转页面

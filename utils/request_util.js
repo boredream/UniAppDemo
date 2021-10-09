@@ -1,21 +1,21 @@
 export default {
 	request,
-	getTable,
-	getPageTable,
-	postTable,
-	putTable,
-	deleteTable,
+	get,
+	getPage,
+	post,
+	put,
+	del,
 }
 
-const HOST = 'http://106.14.25.153:8080/';
-// const HOST = 'http://localhost:8080/';
+// const HOST = 'http://106.14.25.153:8080/';
+const HOST = 'http://localhost:8080/';
 const CODE_SUCCESS = 1;
 
-function getTable(path, onSuccess) {
+function get(path, onSuccess) {
 	request("GET", path, null, null, onSuccess);
 }
 
-function getPageTable(path, page, size, onSuccess) {
+function getPage(path, page, size, onSuccess) {
 	if (path.indexOf("?") >= 0) {
 		path += "&";
 	} else {
@@ -25,11 +25,11 @@ function getPageTable(path, page, size, onSuccess) {
 	request("GET", path, null, null, onSuccess);
 }
 
-function postTable(path, data, onSuccess) {
+function post(path, data, onSuccess) {
 	request("POST", path, data, null, onSuccess);
 }
 
-function putTable(path, id, data, onSuccess) {
+function put(path, id, data, onSuccess) {
 	path = path + "/" + id;
 	request("PUT", path, data, null, onSuccess);
 	// request(requestMethod, requestPath, null, null, (res) => {
@@ -40,7 +40,7 @@ function putTable(path, id, data, onSuccess) {
 	// });
 }
 
-function deleteTable(path, id, onSuccess) {
+function del(path, id, onSuccess) {
 	var requestPath = path + "/" + id;
 	request("DELETE", requestPath, null, null, onSuccess);
 }
