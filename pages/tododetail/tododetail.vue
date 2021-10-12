@@ -5,7 +5,8 @@
 			class="post-txt"></textarea>
 		<view @click="showDoneDate = true">完成日期：{{info.doneDate != null ? info.doneDate : ""}}</view>
 		<!-- <view @click="showNotifyDate = true">提醒日期：{{info.notifyDate}}</view> -->
-		<u-upload ref="uUpload" :size-type="['compressed']" :max-count="9" :auto-upload="false" :file-list="exsitImageList"></u-upload>
+		<u-upload ref="uUpload" :size-type="['compressed']" :max-count="9" :auto-upload="false"
+			:file-list="exsitImageList"></u-upload>
 		<u-picker :default-time="info.doneDate" @confirm="onDoneDateSelected" mode="time" v-model="showDoneDate">
 		</u-picker>
 		<u-picker :default-time="info.notifyDate" @confirm="onNotifyDateSelected" mode="time" v-model="showNotifyDate">
@@ -17,6 +18,8 @@
 
 <script>
 	import request from "../../utils/request_util.js";
+	import imageUploadUtil from "../../utils/imageUploadUtil.js";
+
 	export default {
 		onLoad(options) {
 			if (options.type != null) {
@@ -34,10 +37,21 @@
 				isEdit: false,
 				showDoneDate: false,
 				showNotifyDate: false,
-				exsitImageList: [{
-					"url": "https://img1.baidu.com/it/u=3628483870,3822231434&fm=26&fmt=auto"
-				}],
 				info: {},
+			}
+		},
+		computed: {
+			exsitImageList() {
+				var images = this.info.images;
+				var exsitImageList = [];
+				if (images != null && images.length > 0) {
+					images.split(",").forEach(function(e) {
+						exsitImageList.push({
+							"url": e
+						});
+					});
+				}
+				return exsitImageList;
 			}
 		},
 		methods: {
@@ -49,57 +63,27 @@
 			},
 			commitData() {
 				// 如果有本地图片，则先进行上传
-				var imageList = this.$refs.uUpload.lists;
-				var uploadImageList = [];
-				for(let i in imageList) {
-					var image = imageList[i];
-					if(image.file != null) {
-						uploadImageList.push(image.file.path);
+				uni.showLoading();
+				imageUploadUtil.check4upload(this.$refs.uUpload.lists).then((imageList) => {
+					var images = "";
+					for (let i in imageList) {
+						var image = imageList[i];
+						// 挨个取出已上传图片url，拼接
+						if (image.url != null) {
+							images += ("," + image.url);
+						}
 					}
-				}
-				
-				// uni.showLoading();
-				
-				// 先获取上传凭证
-				// request.get("file/getUploadPolicy", (res)=> {
-				// 	console.log(res);
-				// });
-				
-				// {"code":1,"msg":"操作成功!","success":true,"data":{"token":"wdoVNp9qXmswTakEjVcfFEqdi0JebQi8tNLDxMJg:aWUB4E1Qe58teRHnUCxro9xVP54=:eyJzY29wZSI6ImJvcmVkcmVhbS1maWxlcyIsImRlYWRsaW5lIjoxNjMzNzY4ODUxfQ==","host":"r0p1o4yza.hd-bkt.clouddn.com"}}
-				
-				var url = "http://up.qiniu.com";
-				var token = "wdoVNp9qXmswTakEjVcfFEqdi0JebQi8tNLDxMJg:hHRKdhNglX_P897tuWk_AhONorw=:eyJzY29wZSI6ImJvcmVkcmVhbS1maWxlcyIsImRlYWRsaW5lIjoxNjMzNzcwMTg2fQ==";
-				var filename = "image" + (new Date().getTime()) + ".jpg";
-				uni.uploadFile({
-				            url: url,
-				            filePath: uploadImageList[0],
-				            name: 'file',
-				            formData: {
-				                token: token,
-				                key: filename
-				            },
-				            complete: (res) => {
-				                if (res.statusCode === 200) {
-				                    const name = JSON.parse(res.data).key;
-				                    // this.images[i] = 'https://picture.wrpxcx.com/' + name;
-									console.log("upload uccess " + res);
-				                }
-				            },
-				        })
-						
-				// var imageList = this.$refs.uUpload.lists;
-				// for(let i in imageList) {
-				// 	var image = imageList[i];
-				// 	if(image.file != null) {
-				// 		console.log(image);
-				// 	}
-				// }
-				
-				// if (this.isEdit) {
-				// 	request.put("todo", this.info.id, this.info, "修改成功");
-				// } else {
-				// 	request.post("todo", this.info, "新增成功");
-				// }
+					if (images.length > 0) {
+						this.info.images = images.substring(1);
+					}
+					uni.hideLoading();
+
+					if (this.isEdit) {
+						request.put("todo", this.info.id, this.info, "修改成功");
+					} else {
+						request.post("todo", this.info, "新增成功");
+					}
+				});
 			},
 			deleteData() {
 				request.del("todo", this.info.id, "删除成功");
