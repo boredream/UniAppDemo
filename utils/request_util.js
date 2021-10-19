@@ -7,9 +7,9 @@ export default {
 	del,
 }
 
+const HOST = 'https://www.papikoala.cn/';
 // const HOST = 'http://106.14.25.153:8080/';
-const HOST = 'http://localhost:8080/';
-const CODE_SUCCESS = 1;
+// const HOST = 'http://localhost:8080/';
 
 function get(path, onSuccess) {
 	request("GET", path, null, null, onSuccess);
@@ -32,12 +32,6 @@ function post(path, data, onSuccess) {
 function put(path, id, data, onSuccess) {
 	path = path + "/" + id;
 	request("PUT", path, data, null, onSuccess);
-	// request(requestMethod, requestPath, null, null, (res) => {
-	// 	uni.showToast({
-	// 		title: "提交成功"
-	// 	});
-	// 	uni.navigateBack();
-	// });
 }
 
 function del(path, id, onSuccess) {
@@ -55,8 +49,8 @@ function request(method, path, data, extraHeader, onSuccess) {
 		header: getHeader(extraHeader),
 		data: data,
 		success: (res) => {
-			if (res.data.code != CODE_SUCCESS) {
-				onFail(res.data.code + ":" + res.data.message);
+			if (!res.data.success) {
+				onFail(res.data.code + ":" + res.data.msg);
 				return;
 			}
 
@@ -73,7 +67,7 @@ function request(method, path, data, extraHeader, onSuccess) {
 			}
 		},
 		fail: (error) => {
-			console.log("request fail " + error);
+			console.log("request fail " + JSON.stringify(error));
 			onFail(error);
 		},
 		complete: () => {

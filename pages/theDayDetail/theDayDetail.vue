@@ -5,8 +5,8 @@
 			class="post-txt"></textarea>
 		<view @click="showTheDayDate = true">记录日期：{{info.theDayDate != null ? info.theDayDate : ""}}</view>
 		<view @click="showNotifyDate = true">提醒日期：{{info.notifyDate != null ? info.notifyDate : ""}}</view>
-		<u-upload ref="uUpload" :size-type="['compressed']" name="Image" :max-count="9" :action="uploadImgUrl"
-			@on-uploaded="submit" :auto-upload="false"></u-upload>
+		<u-upload ref="uUpload" :size-type="['compressed']" :max-count="9" :auto-upload="false"
+			:file-list="exsitImageList"></u-upload>
 		<u-picker :default-time="info.theDayDate != null ? info.theDayDate : ''" @confirm="onTheDayDateSelected"
 			mode="time" v-model="showTheDayDate">
 		</u-picker>
@@ -20,6 +20,8 @@
 
 <script>
 	import request from "../../utils/request_util.js";
+	import imageUploadUtil from "../../utils/imageUploadUtil.js";
+	
 	export default {
 		onLoad(options) {
 			if (options.date != null) {
@@ -37,8 +39,21 @@
 				isEdit: false,
 				showTheDayDate: false,
 				showNotifyDate: false,
-				uploadImgUrl: '图片上传地址',
 				info: {},
+			}
+		},
+		computed: {
+			exsitImageList() {
+				var images = this.info.images;
+				var exsitImageList = [];
+				if (images != null && images.length > 0) {
+					images.split(",").forEach(function(e) {
+						exsitImageList.push({
+							"url": e
+						});
+					});
+				}
+				return exsitImageList;
 			}
 		},
 		methods: {
@@ -49,11 +64,34 @@
 				this.info.notifyDate = params.year + '-' + params.month + '-' + params.day
 			},
 			commitData() {
-				if (this.isEdit) {
-					request.put("the_day", this.info.id, this.info, "修改成功");
-				} else {
-					request.post("the_day", this.info, "新增成功");
-				}
+				// 如果有本地图片，则先进行上传
+				uni.showLoading();
+				imageUploadUtil.check4upload(this.$refs.uUpload.lists).then((imageList) => {
+					var images = "";
+					for (let i in imageList) {
+						var image = imageList[i];
+						// 挨个取出已上传图片url，拼接
+						if (image.url != null) {
+							images += ("," + image.url);
+						}
+					}
+					if (images.length > 0) {
+						this.info.images = images.substring(1);
+					}
+					uni.hideLoading();
+				
+					// 上传成功后发送请求
+					if (this.isEdit) {
+						request.put("the_day", this.info.id, this.info, "修改成功");
+					} else {
+						request.post("the_day", this.info, "新增成功");
+					}
+				}).catch((error) => {
+					uni.hideLoading();
+					uni.showToast({
+						title: "图片上传失败，请重新提交"
+					});
+				});
 			},
 			deleteData() {
 				request.del("the_day", this.info.id, "删除成功");

@@ -78,11 +78,17 @@
 					}
 					uni.hideLoading();
 
+					// 上传成功后发送请求
 					if (this.isEdit) {
 						request.put("todo", this.info.id, this.info, "修改成功");
 					} else {
 						request.post("todo", this.info, "新增成功");
 					}
+				}).catch((error) => {
+					uni.hideLoading();
+					uni.showToast({
+						title: "图片上传失败，请重新提交"
+					});
 				});
 			},
 			deleteData() {
