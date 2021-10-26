@@ -1,14 +1,15 @@
 <template>
 	<view>
 		<!-- #ifdef MP-WEIXIN -->
-		<button class="sys_btn" open-type="getUserInfo" lang="zh_CN" @getuserinfo="appLoginWx">小程序登录授权</button>
+		<button class="sys_btn" open-type="getUserInfo" lang="zh_CN" @getuserinfo="appLoginWx">
+			小程序授权登录
+		</button>
 		<!-- #endif -->
 	</view>
 </template>
 
 <script>
 	import request from "../../utils/request_util.js";
-
 	export default {
 		data() {
 			return {
