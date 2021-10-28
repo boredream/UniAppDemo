@@ -1,10 +1,6 @@
 <template>
 	<view>
-		<!-- #ifdef MP-WEIXIN -->
-		<button class="sys_btn" open-type="getUserInfo" lang="zh_CN" @getuserinfo="appLoginWx">
-			小程序授权登录
-		</button>
-		<!-- #endif -->
+		加载中...
 	</view>
 </template>
 
@@ -18,11 +14,18 @@
 		},
 		onLoad(option) {
 			// 自动登录
-			if (uni.getStorageSync("token") != null) {
+			if (uni.getStorageSync("token").data != null) {
 				this.getUserInfo();
+			} else {
+				this.route2login();
 			}
 		},
 		methods: {
+			route2login() {
+				uni.navigateTo({
+					url: "../login/login",
+				});
+			},
 			route2main() {
 				uni.switchTab({
 					url: "../todolist/todolist",
@@ -30,51 +33,13 @@
 			},
 			getUserInfo() {
 				request.get("user/info", (res) => {
-					console.log("auto login success");
+					console.log("auto login success " + JSON.stringify(res));
 					uni.setStorage({
 						key: "user",
-						data: res.data
+						data: res
 					});
 					this.route2main();
 				});
-			},
-			appLoginWx() {
-				// #ifdef MP-WEIXIN
-				// step1. 检测手机上是否安装微信
-				console.log("step1. 检测手机上是否安装微信");
-				uni.getProvider({
-					service: 'oauth',
-					success: (res) => {
-						if (~res.provider.indexOf('weixin')) {
-							// step2. wx授权登录，获取code
-							console.log("step2. wx授权登录，获取code");
-							uni.login({
-								provider: 'weixin',
-								success: (authCode) => {
-									// step3. 通过code获取微信openId，并完成登录/注册，最终生成token
-									console.log("step3. 通过code获取微信openId，并完成登录/注册，最终生成token " + authCode);
-									request.post("user/wxlogin", authCode, (token) => {
-										console.log("wx login success = " + token);
-										uni.setStorageSync("token", token);
-										// step4. 获取用户信息，完成登录流程，跳转页面
-										this.getUserInfo();
-									});
-								},
-								fail: () => {
-									uni.showToast({
-										title: "微信登录授权失败",
-										icon: "none"
-									});
-								}
-							});
-						} else {
-							uni.showToast({
-								title: '请先安装微信或升级版本'
-							});
-						}
-					}
-				});
-				//#endif
 			},
 		}
 	}

@@ -1,6 +1,7 @@
 <template>
 	<view>
-		
+		{{user.username}}
+		<button @click="logout">退出登录</button>
 	</view>
 </template>
 
@@ -8,23 +9,32 @@
 	export default {
 		data() {
 			return {
-				
+				user: {}
 			}
 		},
 		onLoad() {
-			this.getUserInfo();
+			this.getUserInfoFromLocal();
 		},
 		methods: {
-			getUserInfo() {
-				request.get("user/info", (res) => {
-					console.log("auto login success");
-					uni.getStorage({
-						key: "user",
-						success:(res) => {
-							console.log("user = " + res);
-						}
-					});
-					this.route2main();
+			getUserInfoFromLocal() {
+				uni.getStorage({
+					key: "user",
+					success: (res) => {
+						console.log("get user from local = " + JSON.stringify(res));
+						this.user = res.data;
+					}
+				});
+			},
+			logout() {
+				console.log("logout");
+				uni.removeStorage({
+					key: "user"
+				});
+				uni.removeStorage({
+					key: "token"
+				});
+				uni.navigateTo({
+					url: "../login/login",
 				});
 			},
 		}

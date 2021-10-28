@@ -7,9 +7,8 @@ export default {
 	del,
 }
 
-const HOST = 'https://api.papikoala.cn/';
-// const HOST = 'http://106.14.25.153:8080/';
-// const HOST = 'https://localhost:443/';
+const HOST = 'https://www.papikoala.cn/api/';
+// const HOST = 'https://localhost:443/api/';
 
 function get(path, onSuccess) {
 	request("GET", path, null, null, onSuccess);
@@ -82,7 +81,7 @@ function getHeader(extraHeader) {
 		headers = extraHeader;
 	}
 	var token = uni.getStorageSync("token");
-	if (token != null) {
+	if (token != null && token.length > 0) {
 		headers["token"] = token;
 	}
 	console.log("getHeader: " + JSON.stringify(headers));
