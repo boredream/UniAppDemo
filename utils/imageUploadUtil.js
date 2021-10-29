@@ -38,7 +38,20 @@ async function check4upload(imageList) {
 		}
 	}
 	
-	return imageList;
+	// 拼接返回url
+	var imageUrls = "";
+	for (let i in imageList) {
+		var image = imageList[i];
+		// 挨个取出已上传图片url，拼接
+		if (image.url != null) {
+			if(i > 0) {
+				image += ",";
+			}
+			imageUrls += image.url;
+		}
+	}
+	
+	return imageUrls;
 }
 
 function getUploadPolicy() {

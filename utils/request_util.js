@@ -84,7 +84,7 @@ function getHeader(extraHeader) {
 	if (token != null && token.length > 0) {
 		headers["token"] = token;
 	}
-	console.log("getHeader: " + JSON.stringify(headers));
+	// console.log("getHeader: " + JSON.stringify(headers));
 	return headers;
 }
 

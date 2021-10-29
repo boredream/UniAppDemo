@@ -21,12 +21,6 @@
 				form: {},
 			};
 		},
-		onLoad(option) {
-			// 自动登录
-			if (uni.getStorageSync("token") != null) {
-				this.getUserInfo();
-			}
-		},
 		methods: {
 			route2main() {
 				uni.switchTab({
@@ -35,7 +29,7 @@
 			},
 			getUserInfo() {
 				request.get("user/info", (res) => {
-					console.log("auto login success");
+					console.log("auto login success = " + JSON.stringify(res));
 					uni.setStorage({
 						key: "user",
 						data: res

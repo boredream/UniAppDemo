@@ -66,19 +66,8 @@
 			commitData() {
 				// 如果有本地图片，则先进行上传
 				uni.showLoading();
-				imageUploadUtil.check4upload(this.$refs.uUpload.lists).then((imageList) => {
-					var images = "";
-					for (let i in imageList) {
-						var image = imageList[i];
-						// 挨个取出已上传图片url，拼接
-						if (image.url != null) {
-							images += ("," + image.url);
-						}
-					}
-					if (images.length > 0) {
-						this.info.images = images.substring(1);
-					}
-					uni.hideLoading();
+				imageUploadUtil.check4upload(this.$refs.uUpload.lists).then((imageUrls) => {
+					this.info.images = imageUrls;
 				
 					// 上传成功后发送请求
 					if (this.isEdit) {
