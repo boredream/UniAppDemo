@@ -29,7 +29,6 @@
 			},
 			getUserInfo() {
 				request.get("user/info", (res) => {
-					console.log("auto login success = " + JSON.stringify(res));
 					uni.setStorage({
 						key: "user",
 						data: res
@@ -39,7 +38,7 @@
 			},
 			login() {
 				request.post("user/login", this.form, (token) => {
-					console.log("wx login success = " + token);
+					console.log("login success = " + token);
 					uni.setStorageSync("token", token);
 					this.getUserInfo();
 				});

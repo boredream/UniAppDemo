@@ -63,7 +63,6 @@
 			},
 			commitData() {
 				// 如果有本地图片，则先进行上传
-				uni.showLoading();
 				imageUploadUtil.check4upload(this.$refs.uUpload.lists).then((imageUrls) => {
 					this.info.images = imageUrls;
 

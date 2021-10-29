@@ -14,7 +14,8 @@
 		},
 		onLoad(option) {
 			// 自动登录
-			if (uni.getStorageSync("token").data != null) {
+			var token = uni.getStorageSync("token");
+			if (token != null) {
 				this.getUserInfo();
 			} else {
 				this.route2login();

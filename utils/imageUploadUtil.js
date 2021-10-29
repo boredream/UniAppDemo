@@ -23,9 +23,14 @@ async function check4upload(imageList) {
 	if(localImageList.length != 0) {
 		// 先获取上传凭证
 		var policy = await getUploadPolicy();
+		
 		// 图片挨个上传
+		uni.showLoading({
+			title: "上传图片中...",
+		});
 		for (let i in localImageList) {
 			var path = localImageList[i];
+			// console.log("start upload localImag = " + path);
 			var imageUrl = await uploadImage(policy, path);
 			// TODO 部分上传成功后咋处理？
 			// 上传成功后替换原有图片，并清除path路径
@@ -36,6 +41,8 @@ async function check4upload(imageList) {
 				}
 			}
 		}
+		
+		uni.hideLoading();
 	}
 	
 	// 拼接返回url
@@ -45,12 +52,13 @@ async function check4upload(imageList) {
 		// 挨个取出已上传图片url，拼接
 		if (image.url != null) {
 			if(i > 0) {
-				image += ",";
+				imageUrls += ",";
 			}
 			imageUrls += image.url;
 		}
 	}
 	
+	// console.log("done check4upload localImagList = " + imageUrls);
 	return imageUrls;
 }
 
