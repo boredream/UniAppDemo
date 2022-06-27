@@ -5,8 +5,7 @@
 			class="post-txt"></textarea>
 		<view @click="showTheDayDate = true">记录日期：{{info.theDayDate != null ? info.theDayDate : ""}}</view>
 		<view @click="showNotifyDate = true">提醒日期：{{info.notifyDate != null ? info.notifyDate : ""}}</view>
-		<u-upload ref="uUpload" :size-type="['compressed']" :max-count="9" :auto-upload="false"
-			:file-list="exsitImageList"></u-upload>
+		<u-upload sizeType="['compressed']" maxCount="9" :fileList="exsitImageList"></u-upload>
 		<u-picker :default-time="info.theDayDate != null ? info.theDayDate : ''" @confirm="onTheDayDateSelected"
 			mode="time" v-model="showTheDayDate">
 		</u-picker>
@@ -21,7 +20,7 @@
 <script>
 	import request from "../../utils/request_util.js";
 	import imageUploadUtil from "../../utils/imageUploadUtil.js";
-	
+
 	export default {
 		onLoad(options) {
 			if (options.date != null) {
@@ -68,7 +67,7 @@
 				uni.showLoading();
 				imageUploadUtil.check4upload(this.$refs.uUpload.lists).then((imageUrls) => {
 					this.info.images = imageUrls;
-				
+
 					// 上传成功后发送请求
 					if (this.isEdit) {
 						request.put("the_day", this.info.id, this.info, "修改成功");

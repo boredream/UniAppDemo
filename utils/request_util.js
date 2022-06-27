@@ -7,8 +7,8 @@ export default {
 	del,
 }
 
-const HOST = 'https://www.papikoala.cn/api/';
-// const HOST = 'https://localhost:443/api/';
+// const HOST = 'https://www.papikoala.cn/api/';
+const HOST = 'http://localhost:8080/api/';
 
 function get(path, onSuccess) {
 	request("GET", path, null, null, onSuccess);

@@ -64,10 +64,7 @@
 		 * 下拉刷新回调函数
 		 */
 		onPullDownRefresh() {
-			this.list = ['java', '测试', '前端', 'UI', '大数据']
-			setTimeout(() => {
-				uni.stopPullDownRefresh()
-			}, 2000);
+			this.loadData();
 		},
 		/**
 		 * 上拉加载回调函数

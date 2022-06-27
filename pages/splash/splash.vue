@@ -9,13 +9,13 @@
 	export default {
 		data() {
 			return {
-
 			};
 		},
 		onLoad(option) {
 			// 自动登录
 			var token = uni.getStorageSync("token");
-			if (token != null) {
+			console.log("token = " + token);
+			if (token != null && token.length > 0) {
 				this.getUserInfo();
 			} else {
 				this.route2login();
